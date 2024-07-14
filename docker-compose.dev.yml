@@ -1,3 +1,6 @@
+# docker compose -f docker-compose.dev.yml down -v
+# docker compose -f docker-compose.dev.yml up --build
+
 services:
   postgres_db:
     build:
@@ -8,22 +11,20 @@ services:
     restart: always
     environment:
       PG_PASSWORD: ${PG_PASSWORD}
-
       DEBUG: ${DEBUG}
-
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
       DB_TEMPLATE: ${DB_TEMPLATE}
-
       DB_EXTENSION: ${DB_EXTENSION}
-
       REPLICATION_MODE: ${REPLICATION_MODE}
       REPLICATION_USER: ${REPLICATION_USER}
       REPLICATION_PASS: ${REPLICATION_PASS}
       REPLICATION_SSLMODE: ${REPLICATION_SSLMODE}
     ports:
       - '5432:5432'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
       - .env
     volumes:
@@ -35,6 +36,8 @@ services:
     restart: always
     ports:
       - "8282:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   pgdata:
